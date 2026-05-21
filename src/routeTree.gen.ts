@@ -14,6 +14,7 @@ import { Route as SupportRouteImport } from './routes/support'
 import { Route as CheckoutRouteImport } from './routes/checkout'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ProductIdRouteImport } from './routes/product.$id'
+import { Route as CategoryNameRouteImport } from './routes/category.$name'
 
 const VerifyRoute = VerifyRouteImport.update({
   id: '/verify',
@@ -40,12 +41,18 @@ const ProductIdRoute = ProductIdRouteImport.update({
   path: '/product/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CategoryNameRoute = CategoryNameRouteImport.update({
+  id: '/category/$name',
+  path: '/category/$name',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/checkout': typeof CheckoutRoute
   '/support': typeof SupportRoute
   '/verify': typeof VerifyRoute
+  '/category/$name': typeof CategoryNameRoute
   '/product/$id': typeof ProductIdRoute
 }
 export interface FileRoutesByTo {
@@ -53,6 +60,7 @@ export interface FileRoutesByTo {
   '/checkout': typeof CheckoutRoute
   '/support': typeof SupportRoute
   '/verify': typeof VerifyRoute
+  '/category/$name': typeof CategoryNameRoute
   '/product/$id': typeof ProductIdRoute
 }
 export interface FileRoutesById {
@@ -61,14 +69,34 @@ export interface FileRoutesById {
   '/checkout': typeof CheckoutRoute
   '/support': typeof SupportRoute
   '/verify': typeof VerifyRoute
+  '/category/$name': typeof CategoryNameRoute
   '/product/$id': typeof ProductIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/checkout' | '/support' | '/verify' | '/product/$id'
+  fullPaths:
+    | '/'
+    | '/checkout'
+    | '/support'
+    | '/verify'
+    | '/category/$name'
+    | '/product/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/checkout' | '/support' | '/verify' | '/product/$id'
-  id: '__root__' | '/' | '/checkout' | '/support' | '/verify' | '/product/$id'
+  to:
+    | '/'
+    | '/checkout'
+    | '/support'
+    | '/verify'
+    | '/category/$name'
+    | '/product/$id'
+  id:
+    | '__root__'
+    | '/'
+    | '/checkout'
+    | '/support'
+    | '/verify'
+    | '/category/$name'
+    | '/product/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -76,6 +104,7 @@ export interface RootRouteChildren {
   CheckoutRoute: typeof CheckoutRoute
   SupportRoute: typeof SupportRoute
   VerifyRoute: typeof VerifyRoute
+  CategoryNameRoute: typeof CategoryNameRoute
   ProductIdRoute: typeof ProductIdRoute
 }
 
@@ -116,6 +145,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProductIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/category/$name': {
+      id: '/category/$name'
+      path: '/category/$name'
+      fullPath: '/category/$name'
+      preLoaderRoute: typeof CategoryNameRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -124,8 +160,19 @@ const rootRouteChildren: RootRouteChildren = {
   CheckoutRoute: CheckoutRoute,
   SupportRoute: SupportRoute,
   VerifyRoute: VerifyRoute,
+  CategoryNameRoute: CategoryNameRoute,
   ProductIdRoute: ProductIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}

@@ -2,8 +2,8 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight, Leaf, MapPin, ShieldCheck, Truck } from "lucide-react";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
-import { ProductCard } from "@/components/ProductCard";
-import { products } from "@/lib/products";
+import { CategoryCard } from "@/components/CategoryCard";
+import { categories } from "@/lib/products";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -68,20 +68,20 @@ function HomePage() {
           </div>
         </section>
 
-        {/* Marketplace grid */}
+        {/* Categories */}
         <section className="pt-6 pb-16">
           <div className="mb-6 flex items-end justify-between">
             <div>
-              <h2 className="font-display text-2xl sm:text-3xl">Today's market</h2>
+              <h2 className="font-display text-2xl sm:text-3xl">Shop by category</h2>
               <p className="text-sm text-muted-foreground">
-                Picked this morning. Prices in naira, no hidden fees.
+                Six curated aisles of indigenous Nigerian goods — tap to explore.
               </p>
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4 sm:gap-5 md:grid-cols-3 lg:grid-cols-4">
-            {products.map((p) => (
-              <ProductCard key={p.id} product={p} />
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3">
+            {categories.map((c) => (
+              <CategoryCard key={c.slug} category={c} />
             ))}
           </div>
         </section>
