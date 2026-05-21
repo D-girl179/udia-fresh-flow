@@ -67,7 +67,7 @@ function ProductPage() {
 
           <div className="flex flex-col">
             <div className="text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
-              {product.category} · {product.origin}
+              {categoryName(product.category)} · {product.origin}
             </div>
             <h1 className="mt-3 font-display text-4xl leading-tight sm:text-5xl">
               {product.name}
