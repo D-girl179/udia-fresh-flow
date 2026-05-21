@@ -4,7 +4,7 @@ import { useState } from "react";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { ProductCard } from "@/components/ProductCard";
-import { formatNaira, getProduct, getSimilar } from "@/lib/products";
+import { categoryName, formatNaira, getProduct, getSimilar } from "@/lib/products";
 import { cart } from "@/lib/cart";
 
 export const Route = createFileRoute("/product/$id")({
@@ -67,7 +67,7 @@ function ProductPage() {
 
           <div className="flex flex-col">
             <div className="text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
-              {product.category} · {product.origin}
+              {categoryName(product.category)} · {product.origin}
             </div>
             <h1 className="mt-3 font-display text-4xl leading-tight sm:text-5xl">
               {product.name}

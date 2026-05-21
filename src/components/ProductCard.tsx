@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import type { Product } from "@/lib/products";
-import { formatNaira } from "@/lib/products";
+import { categoryName, formatNaira } from "@/lib/products";
 
 export function ProductCard({ product }: { product: Product }) {
   return (
@@ -22,7 +22,7 @@ export function ProductCard({ product }: { product: Product }) {
       <div className="flex items-start justify-between gap-3 p-4">
         <div className="min-w-0">
           <div className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">
-            {product.category}
+            {categoryName(product.category)}
           </div>
           <div className="mt-1 truncate font-display text-lg font-medium">
             {product.name}
