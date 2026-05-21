@@ -113,7 +113,7 @@ function ProductPage() {
         <section className="mt-20 pb-16">
           <h2 className="font-display text-2xl sm:text-3xl">Similar harvests</h2>
           <div className="mt-6 grid grid-cols-2 gap-4 sm:gap-5 md:grid-cols-4">
-            {similar.map((p) => (
+            {similar.map((p: typeof product) => (
               <ProductCard key={p.id} product={p} />
             ))}
           </div>
