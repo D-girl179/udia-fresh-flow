@@ -4,7 +4,7 @@ import { useState } from "react";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { ProductCard } from "@/components/ProductCard";
-import { formatNaira, getProduct, getSimilar } from "@/lib/products";
+import { categoryName, formatNaira, getProduct, getSimilar } from "@/lib/products";
 import { cart } from "@/lib/cart";
 
 export const Route = createFileRoute("/product/$id")({
