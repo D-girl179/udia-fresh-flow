@@ -2,7 +2,6 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { ArrowLeft, CheckCircle2, Loader2, ShieldCheck, XCircle } from "lucide-react";
 import { SiteHeader } from "@/components/SiteHeader";
-import { ScannerWidget } from "@/components/ScannerWidget";
 
 export const Route = createFileRoute("/verify")({
   head: () => ({
@@ -29,36 +28,26 @@ function VerifyPage() {
   const [batch, setBatch] = useState("");
   const [result, setResult] = useState<Result>({ status: "idle" });
 
-  function runVerify(n: string, b: string) {
-    const code = n.trim();
-    if (!code) return;
+  function onSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    if (!nafdac.trim()) return;
     setResult({ status: "loading" });
     setTimeout(() => {
-      const valid = /^\d/.test(code);
+      // mock: any NAFDAC starting with a digit is "valid"
+      const valid = /^\d/.test(nafdac.trim());
       if (valid) {
         setResult({
           status: "ok",
-          nafdac: code.toUpperCase(),
-          batch: b.trim().toUpperCase() || "—",
+          nafdac: nafdac.trim().toUpperCase(),
+          batch: batch.trim().toUpperCase() || "—",
           name: "Paracetamol 500mg Tablets",
           mfg: "Emzor Pharmaceuticals Ltd.",
           exp: "08 / 2027",
         });
       } else {
-        setResult({ status: "fail", nafdac: code });
+        setResult({ status: "fail", nafdac: nafdac.trim() });
       }
     }, 900);
-  }
-
-  function onSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    runVerify(nafdac, batch);
-  }
-
-  function onScan({ nafdac: n, batch: b }: { nafdac: string; batch?: string }) {
-    setNafdac(n);
-    setBatch(b ?? "");
-    runVerify(n, b ?? "");
   }
 
   return (
@@ -92,19 +81,9 @@ function VerifyPage() {
           and confirm the manufacturer and expiry.
         </p>
 
-        <div className="mt-10">
-          <ScannerWidget onDetect={onScan} />
-        </div>
-
-        <div className="mt-8 flex items-center gap-4 text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
-          <span className="h-px flex-1 bg-border" />
-          or enter it manually
-          <span className="h-px flex-1 bg-border" />
-        </div>
-
         <form
           onSubmit={onSubmit}
-          className="mt-6 rounded-2xl border border-border bg-card p-6 sm:p-8"
+          className="mt-10 rounded-2xl border border-border bg-card p-6 sm:p-8"
         >
           <div className="grid gap-5 sm:grid-cols-2">
             <label className="block">
