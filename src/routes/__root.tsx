@@ -75,11 +75,15 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { title: "Udia — Indigenous Nigerian Food & NAFDAC Drug Verification" },
       { name: "description", content: "Fresh local food from Calabar and NAFDAC drug standard verification, delivered or picked up." },
       { name: "author", content: "Udia" },
-      { property: "og:title", content: "Udia — Food & Wellness" },
-      { property: "og:description", content: "Fresh indigenous food and verified drugs, from Calabar." },
+      { property: "og:title", content: "Udia — Indigenous Nigerian Food & NAFDAC Drug Verification" },
+      { property: "og:description", content: "Fresh local food from Calabar and NAFDAC drug standard verification, delivered or picked up." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:title", content: "Udia — Indigenous Nigerian Food & NAFDAC Drug Verification" },
+      { name: "twitter:description", content: "Fresh local food from Calabar and NAFDAC drug standard verification, delivered or picked up." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/3596d66d-fe22-4bfd-a4c8-9d27b1e0391b/id-preview-baaa33ba--3f85b262-648d-431b-a1b6-eaa1bab5dd97.lovable.app-1779395903576.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/3596d66d-fe22-4bfd-a4c8-9d27b1e0391b/id-preview-baaa33ba--3f85b262-648d-431b-a1b6-eaa1bab5dd97.lovable.app-1779395903576.png" },
     ],
     links: [
       {
