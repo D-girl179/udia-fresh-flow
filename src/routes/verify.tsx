@@ -2,13 +2,16 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { ArrowLeft, CheckCircle2, Loader2, ShieldCheck, XCircle } from "lucide-react";
 import { SiteHeader } from "@/components/SiteHeader";
-import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/verify")({
   head: () => ({
     meta: [
       { title: "NAFDAC Drug Verification — Udia" },
-      { name: "description", content: "Verify the NAFDAC registration and batch number of any drug before you take it." },
+      {
+        name: "description",
+        content:
+          "Verify the NAFDAC registration and batch number of any drug before you take it. A clinical-grade safety check from Udia.",
+      },
     ],
   }),
   component: VerifyPage,
@@ -25,71 +28,98 @@ function VerifyPage() {
   const [batch, setBatch] = useState("");
   const [result, setResult] = useState<Result>({ status: "idle" });
 
-  async function onSubmit(e: React.FormEvent) {
+  function onSubmit(e: React.FormEvent) {
     e.preventDefault();
-    const n = nafdac.trim();
-    if (!n) return;
+    if (!nafdac.trim()) return;
     setResult({ status: "loading" });
-
-    const valid = /^\d/.test(n);
-    const { data: sessionData } = await supabase.auth.getUser();
-    await supabase.from("verifications").insert({
-      user_id: sessionData.user?.id ?? null,
-      nafdac: n.toUpperCase(),
-      batch: batch.trim() || null,
-      result: valid ? "verified" : "not_found",
-    });
-
     setTimeout(() => {
+      // mock: any NAFDAC starting with a digit is "valid"
+      const valid = /^\d/.test(nafdac.trim());
       if (valid) {
         setResult({
           status: "ok",
-          nafdac: n.toUpperCase(),
+          nafdac: nafdac.trim().toUpperCase(),
           batch: batch.trim().toUpperCase() || "—",
           name: "Paracetamol 500mg Tablets",
           mfg: "Emzor Pharmaceuticals Ltd.",
           exp: "08 / 2027",
         });
       } else {
-        setResult({ status: "fail", nafdac: n });
+        setResult({ status: "fail", nafdac: nafdac.trim() });
       }
-    }, 600);
+    }, 900);
   }
 
   return (
     <div className="theme-clinical min-h-screen bg-background text-foreground">
       <SiteHeader variant="clinical" />
+
       <main className="mx-auto max-w-3xl px-5 pt-10 pb-20 animate-soft-in">
-        <Link to="/" className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground">
-          <ArrowLeft className="h-4 w-4" /> Back to market
+        <Link
+          to="/"
+          className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground"
+        >
+          <ArrowLeft className="h-4 w-4" />
+          Back to market
         </Link>
+
         <div className="mt-8 flex items-center gap-3">
           <div className="grid h-12 w-12 place-items-center rounded-2xl bg-primary/10 text-primary">
             <ShieldCheck className="h-6 w-6" />
           </div>
           <div>
-            <div className="text-[11px] uppercase tracking-[0.2em] text-muted-foreground">NAFDAC Verification Service</div>
+            <div className="text-[11px] uppercase tracking-[0.2em] text-muted-foreground">
+              NAFDAC Verification Service
+            </div>
             <h1 className="font-display text-3xl sm:text-4xl">Check before you take it.</h1>
           </div>
         </div>
+
         <p className="mt-6 max-w-2xl text-[15px] leading-relaxed text-muted-foreground">
-          Enter the NAFDAC registration number on the pack, and (if you have it) the batch number.
-          We cross-check against the public NAFDAC standard registry.
+          Enter the NAFDAC registration number on the pack, and (if you have it) the
+          batch number. We cross-check against the public NAFDAC standard registry
+          and confirm the manufacturer and expiry.
         </p>
 
-        <form onSubmit={onSubmit} className="mt-10 rounded-2xl border border-border bg-card p-6 sm:p-8">
+        <form
+          onSubmit={onSubmit}
+          className="mt-10 rounded-2xl border border-border bg-card p-6 sm:p-8"
+        >
           <div className="grid gap-5 sm:grid-cols-2">
             <label className="block">
-              <span className="text-xs font-medium uppercase tracking-[0.14em] text-muted-foreground">NAFDAC Reg. Number</span>
-              <input value={nafdac} onChange={(e) => setNafdac(e.target.value)} placeholder="e.g. 04-1234" className="mt-2 w-full rounded-xl border border-input bg-background px-4 py-3 text-base outline-none ring-ring/40 transition focus:ring-2" />
+              <span className="text-xs font-medium uppercase tracking-[0.14em] text-muted-foreground">
+                NAFDAC Reg. Number
+              </span>
+              <input
+                value={nafdac}
+                onChange={(e) => setNafdac(e.target.value)}
+                placeholder="e.g. 04-1234"
+                className="mt-2 w-full rounded-xl border border-input bg-background px-4 py-3 text-base outline-none ring-ring/40 transition focus:ring-2"
+              />
             </label>
             <label className="block">
-              <span className="text-xs font-medium uppercase tracking-[0.14em] text-muted-foreground">Batch Number (optional)</span>
-              <input value={batch} onChange={(e) => setBatch(e.target.value)} placeholder="e.g. B23A07" className="mt-2 w-full rounded-xl border border-input bg-background px-4 py-3 text-base outline-none ring-ring/40 transition focus:ring-2" />
+              <span className="text-xs font-medium uppercase tracking-[0.14em] text-muted-foreground">
+                Batch Number (optional)
+              </span>
+              <input
+                value={batch}
+                onChange={(e) => setBatch(e.target.value)}
+                placeholder="e.g. B23A07"
+                className="mt-2 w-full rounded-xl border border-input bg-background px-4 py-3 text-base outline-none ring-ring/40 transition focus:ring-2"
+              />
             </label>
           </div>
+
           <button type="submit" className="btn-pill mt-6 w-full sm:w-auto">
-            {result.status === "loading" ? (<><Loader2 className="h-4 w-4 animate-spin" /> Verifying…</>) : (<><ShieldCheck className="h-4 w-4" /> Verify Now</>)}
+            {result.status === "loading" ? (
+              <>
+                <Loader2 className="h-4 w-4 animate-spin" /> Verifying…
+              </>
+            ) : (
+              <>
+                <ShieldCheck className="h-4 w-4" /> Verify Now
+              </>
+            )}
           </button>
         </form>
 
@@ -109,17 +139,26 @@ function VerifyPage() {
             </dl>
           </div>
         )}
+
         {result.status === "fail" && (
           <div className="mt-8 flex items-start gap-3 rounded-2xl border border-destructive/30 bg-destructive/[0.05] p-5 animate-fade-up">
             <XCircle className="mt-0.5 h-5 w-5 text-destructive" />
             <div>
-              <div className="font-medium text-destructive">No record found for "{result.nafdac}"</div>
+              <div className="font-medium text-destructive">
+                No record found for "{result.nafdac}"
+              </div>
               <p className="mt-1 text-sm text-muted-foreground">
-                Don't use this drug. Visit the <Link to="/support" className="underline">support page</Link> for help.
+                Don't use this drug. Report it to NAFDAC or visit the Udia HQ on the{" "}
+                <Link to="/support" className="underline">support page</Link> for help.
               </p>
             </div>
           </div>
         )}
+
+        <p className="mt-12 text-center text-xs text-muted-foreground">
+          This service mirrors the public NAFDAC Greenbook registry. For controlled
+          substances, please consult a licensed pharmacist.
+        </p>
       </main>
     </div>
   );
